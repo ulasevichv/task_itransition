@@ -179,6 +179,8 @@ class ProductDataCSV
         $parsedLines = CSVHelper::parseFile($fileFullPath);
 
         $expectedFields = static::getExpectedFields();
+        $validationRules = static::getValidationRules($expectedFields);
+        $importRules = static::getImportRules($expectedFields);
         $formattedAttributeNames = static::getFormattedAttributeNamesForValidator($expectedFields);
 
         $numItemsProcessed = 0;
@@ -210,8 +212,6 @@ class ProductDataCSV
 
             // Validating line for general format-related errors.
 
-            $validationRules = static::getValidationRules($expectedFields);
-
             try {
                 Validator::make($lineDataArr, $validationRules, [], $formattedAttributeNames)->validate();
             }
@@ -230,8 +230,6 @@ class ProductDataCSV
             }
 
             // Validating line for custom business-logic errors.
-
-            $importRules = static::getImportRules($expectedFields);
 
             try {
                 Validator::make($lineDataArr, $importRules, [], $formattedAttributeNames)->validate();
